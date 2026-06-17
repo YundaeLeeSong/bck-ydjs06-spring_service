@@ -1,20 +1,49 @@
-# --- Generated from ./.gitignores on Sun Mar  1 13:14:32 2026 ---
+# --- Generated from ./.gitignores on Tue Jun 16 19:23:27 2026 ---
 
 #############################################
 # A.gitignore
 #############################################
 #################### ALL PURPOSE GITIGNORE ####################
 project2305*
-_*/
+_*
 tmp*/
 remote*/
 VSLive*/
 vscode*/
 pyright*/
-cursor*/
 python-lang*/
 *.key
 *.key.pub
+log*/
+playwright*/
+h2/
+
+################################################################
+# AI Model Specific Ignores
+################################################################ 
+# Gemini (Google's AI model)
+*[gG][eE][mM][iI][nN][iI]*
+# Cursor IDE
+*[cC][uU][rR][sS][oO][rR]*
+# Kiro (AI code assistant)
+*[kK][iI][rR][oO]*
+
+# for project specific specs
+!/.kiro/
+/.kiro/*
+!/.kiro/specs/
+!.config.kiro
+!/.kiro/steering/
+# CI/CD convention for personal configurations
+/.kiro/steering/plan-*
+/.kiro/steering/code-*
+/.kiro/steering/build-*
+/.kiro/steering/test-*
+/.kiro/steering/release-*
+/.kiro/steering/deploy-*
+/.kiro/steering/operate-*
+/.kiro/steering/monitor-*
+
 
 ################################################################
 # General Ignores (Large Media Files & Common File Types)
@@ -26,7 +55,7 @@ python-lang*/
 *.mkv
 
 # Audios (large media files)
-*.mp3
+# *.mp3
 # *.wav
 # *.flac
 
@@ -120,8 +149,8 @@ bin-release/
 [Oo]bj/
 [Bb]in/
 
-# Other files and folders
-.settings/
+# # Other files and folders
+# .settings/
 
 # Executables
 *.swf
@@ -631,8 +660,8 @@ files/tmp/*
 # ignore updates folder
 /updates/*
 
-# ignore sitemap.xml
-/sitemap.xml
+# # ignore sitemap.xml
+# /sitemap.xml
 
 #############################################
 # Coq.gitignore
@@ -1157,9 +1186,9 @@ resources/.arch-internal-preview.css
 *.ps
 *.mid
 *.midi
-*.mp3
+# *.mp3
 *.aif
-*.wav
+# *.wav
 # Some versions of Finale have a bug and randomly save extra copies of
 # the music source as "<Filename> copy.mus"
 *copy.mus
@@ -1741,8 +1770,8 @@ Debug/
 # IAR project "Release" directory
 Release/
 
-# IAR project settings directory
-settings/
+# # IAR project settings directory
+# settings/
 
 # IAR backup files
 Backup*
@@ -2645,7 +2674,7 @@ Reports/
 \.project
 \.settings/
 bin/lib/
-Libs/
+# Libs/
 .svn/
 .gradle
 
@@ -2704,9 +2733,9 @@ fp-info-cache
 *.dsn
 *.ses
 
-# Exported BOM files
-*.xml
-*.csv
+# # Exported BOM files
+# *.xml
+# *.csv
 
 # Archived Backups (KiCad 6.0)
 **/*-backups/*.zip
@@ -2818,11 +2847,11 @@ auth.json
 #############################################
 # Leiningen.gitignore
 #############################################
-pom.xml
-pom.xml.asc
+# pom.xml
+# pom.xml.asc
 # *.jar
 *.class
-/lib/
+# /lib/
 /classes/
 /target/
 /checkouts/
@@ -3584,7 +3613,7 @@ inc/
 bin/
 /db
 .eclipse
-/lib/
+# /lib/
 /logs/
 /modules
 /project/project
@@ -3768,7 +3797,7 @@ themes/default-bootstrap/modules/*/mails/*
 
 # MISC
 
-*sitemap.xml
+# *sitemap.xml
 /robots.txt
 
 # Symfony
@@ -3842,7 +3871,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/
 lib64/
 parts/
 sdist/
@@ -3926,14 +3955,14 @@ ipython_config.py
 #   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
 #   This is especially recommended for binary packages to ensure reproducibility, and is more
 #   commonly ignored for libraries.
-# uv.lock
+uv.lock
 
 # poetry
 #   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
 #   This is especially recommended for binary packages to ensure reproducibility, and is more
 #   commonly ignored for libraries.
 #   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-# poetry.lock
+poetry.lock
 # poetry.toml
 
 # pdm
@@ -3947,10 +3976,16 @@ ipython_config.py
 
 # pixi
 #   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
-# pixi.lock
+pixi.lock
 #   Pixi creates a virtual environment in the .pixi directory, just like venv module creates one
 #   in the .venv directory. It is recommended not to include this directory in version control.
 .pixi
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
@@ -4170,7 +4205,7 @@ devel/
 logs/
 build/
 bin/
-lib/
+# lib/
 msg_gen/
 srv_gen/
 msg/*Action.msg
@@ -4317,7 +4352,7 @@ lib/.precomp
 # ReScript.gitignore
 #############################################
 /node_modules/
-/lib/
+# /lib/
 .bsb.lock
 
 #############################################
@@ -4849,9 +4884,9 @@ install-log.txt
 *.xdv
 *-converted-to.*
 # these rules might exclude image files for figures etc.
-# *.ps
-# *.eps
-# *.pdf
+*.ps
+*.eps
+*.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
