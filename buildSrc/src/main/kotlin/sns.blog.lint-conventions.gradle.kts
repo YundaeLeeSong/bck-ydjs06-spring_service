@@ -13,7 +13,22 @@ plugins {
  */
 checkstyle {
     toolVersion = "10.16.0"
-    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+    /*
+     * [Past version]
+     * configFile = rootProject.file("config/checkstyle/checkstyle.xml")  // Checkstyle config
+     *
+     * At runtime checkstyle.xml is packed inside buildSrc.jar as a classpath resource.
+     * configFile requires a plain filesystem File and cannot accept a jar: URL.
+     * Switched to resources.text.fromString so the XML is read from the buildSrc
+     * classpath and passed as a TextResource, keeping the config fully inside buildSrc.
+     */
+    val xmlText = checkNotNull(
+        Thread.currentThread().contextClassLoader
+            .getResourceAsStream("sns/blog/checkstyle/checkstyle.xml")
+    ) { "checkstyle.xml not found on buildSrc classpath" }
+        .bufferedReader()
+        .readText()
+    config = resources.text.fromString(xmlText)  // Checkstyle config
     isIgnoreFailures = false
     maxWarnings = 0
 }
