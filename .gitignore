@@ -1,8 +1,11 @@
-# --- Generated from ./.gitignores on Tue Jun 16 19:23:27 2026 ---
+# --- Generated from ./.gitignores on Thu Jun 18 14:12:13 2026 ---
 
 #############################################
 # A.gitignore
 #############################################
+
+# Note: git check-ignore -v <ignored_file> can be used to debug which rule is ignoring a file
+
 #################### ALL PURPOSE GITIGNORE ####################
 project2305*
 _*
@@ -43,6 +46,8 @@ h2/
 /.kiro/steering/deploy-*
 /.kiro/steering/operate-*
 /.kiro/steering/monitor-*
+# Educational Purposed configurations
+/.kiro/steering/edu-*
 
 
 ################################################################
@@ -4120,7 +4125,7 @@ ui_*.h
 *.qmlc
 *.jsc
 Makefile*
-*build-*
+# *build-*
 *.qm
 *.prl
 
@@ -6121,7 +6126,7 @@ wp-config.php
 #############################################
 # Xojo (formerly REALbasic and Real Studio)
 
-Builds*
+# Builds*
 *.debug
 *.debug.app
 Debug*.exe
