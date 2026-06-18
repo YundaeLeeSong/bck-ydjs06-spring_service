@@ -8,11 +8,16 @@ Gradle project with two interchangeable REST backends for a micro-blog API:
 Java 21. Entry point: `sns.blog.App`.
 
 ## Run
-
+To run javalin API server, 
 ```bash
 ./gradlew run --args="javalin"
+``` 
+
+To run Spring API server, 
+```bash
 ./gradlew run --args="spring"
 ``` 
+
 
 ## Test
 
@@ -21,11 +26,16 @@ Java 21. Entry point: `sns.blog.App`.
 ```
 
 ## Lint
-
+To check formatting and naming
 ```bash
-./gradlew :app:Ylint          # check formatting and naming
-./gradlew :app:Ylint --fix    # apply Spotless, then Checkstyle
+./gradlew :app:Ylint
 ```
+
+To apply Spotless, then Checkstyle
+```bash
+./gradlew :app:Ylint --fix
+```
+
 
 Plugin and maintainer notes live in `buildSrc/src/main/kotlin/sns.blog.lint-conventions.gradle.kts`.
 
