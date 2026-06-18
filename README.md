@@ -12,7 +12,7 @@ Java 21. Entry point: `sns.blog.App`.
 ```bash
 ./gradlew run --args="javalin"
 ./gradlew run --args="spring"
-```
+``` 
 
 ## Test
 
