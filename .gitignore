@@ -1,4 +1,4 @@
-# --- Generated from ./.gitignores on Fri Jun 19 12:03:36 2026 ---
+# --- Generated from ./.gitignores on Fri Jun 19 13:05:26 2026 ---
 
 #############################################
 # A.gitignore
@@ -6150,6 +6150,8 @@ Ruth*.pdf
 *[cC][uU][rR][sS][oO][rR]*
 # Kiro (AI code assistant)
 *[kK][iI][rR][oO]*
+# Copilot (GitHub's AI code assistant)
+*[cC][oO][pP][iI][lL][oO][tT]*
 
 ## [Kiro] for project specific specs
 !/.kiro/

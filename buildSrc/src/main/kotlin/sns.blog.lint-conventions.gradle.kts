@@ -1,5 +1,12 @@
 import sns.blog.YlintTask
-
+    
+/*
+ * [Linting Conventions]
+ * Configures Checkstyle and Spotless for static analysis and code formatting (linting).
+ * - Checkstyle:    validates naming conventions and code quality rules without modifying source files.
+ * - Spotless:      fixes code formatting, import optimization, and whitespace cleanup. 
+ *                  (It can be either check-only or auto-fix based on the --fix flag.)
+ */
 plugins {
     checkstyle
     id("com.diffplug.spotless")
@@ -7,9 +14,11 @@ plugins {
 
 /*
  * [Checkstyle audit-only]
- * Scans Java files and fails the build on bad names (package, class, field, etc.).
- * It never edits your files. Rename violations by hand or with a refactor.
- * Spacing and imports are Spotless's job, not Checkstyle's.
+ * Scans Java files and fails the build on bad names and code quality rules as follows.
+ * 1. naming conventions (e.g., class names, method names, field names, package names)
+ * 2. code quality rules (e.g., no empty catch blocks, no magic numbers, no unused variables/imports, no javadoc issues)
+ *
+ * It never edits your files or rename/refactor/modify codes with violations.
  */
 checkstyle {
     toolVersion = "10.16.0"
@@ -18,7 +27,9 @@ checkstyle {
      * configFile = rootProject.file("config/checkstyle/checkstyle.xml")  // Checkstyle config
      *
      * At runtime checkstyle.xml is packed inside buildSrc.jar as a classpath resource.
-     * configFile requires a plain filesystem File and cannot accept a jar: URL.
+     * - 'configFile' requires a plain filesystem File and cannot accept a jar: URL.
+     * - 'config' allows us to read the XML from the classpath and pass it as a TextResource.
+
      * Switched to resources.text.fromString so the XML is read from the buildSrc
      * classpath and passed as a TextResource, keeping the config fully inside buildSrc.
      */
@@ -33,27 +44,39 @@ checkstyle {
     maxWarnings = 0
 }
 
+/**
+ * [Spotless Configuration]
+ * Across Java source sets, it enforces and handles
+ * 1. unified code formatting (e.g., indentation, line breaks, spacing) with google-java-format, 
+ * 2. import optimization (e.g., removing unused imports, sorting imports), and
+ * 3. automatically corrects whitespace layout issues
+ *
+ * It can be run in two modes:
+ * - Check-only: validates formatting and fails on violations without modifying files.
+ * - Auto-fix (--fix): applies formatting corrections before Checkstyle validation.
+ */
 spotless {
     java {
         /*
          * [Spotless opt-out]
-         * Allows a Java file to opt out of auto-format for one section.
+         * Allows a Java file to opt out (bypassed) of auto-format for custom block layouts.
          * In source, wrap the block:
          *   // spotless:off
          *   ... lines you want left as-is ...
          *   // spotless:on
+         * 
          * Use when --fix would break intentional layout (aligned columns, ASCII art).
-         * Checkstyle still runs on the full file; only Spotless skips that block.
+         * [Caution] Checkstyle still runs on the full file, only Spotless skips that block.
          */
         toggleOffOn()
         target("src/main/java/**/*.java", "src/test/java/**/*.java")
         /*
          * [Javadoc HTML]
-         * google-java-format treats Javadoc as text unless you use HTML tags.
-         * A line like "- step one" is not a list; it gets merged into one long line.
-         * Use <ul>/<li> for bullets, <ol>/<li> for numbered steps, <p> for paragraphs.
-         * We fixed this in SocialMediaController, AccountService, and
-         * DeleteMessageByMessageIdTest (expected "Status Code" in <li>).
+         * google-java-format treats Javadoc literally as text 
+         * even if you use HTML tags or markdown format.
+         * 
+         * To preserve the structure of Javadocs and prevent merging of paragraphs,
+         * use standard HTML tags (e.g., <p>, <ul>, <li>) within Javadocs instead of markdown syntax.
          */
         googleJavaFormat("1.22.0")
         removeUnusedImports()
@@ -62,6 +85,7 @@ spotless {
     }
 }
 
+// Register the custom aggregation task for project linting
 tasks.register<YlintTask>("Ylint") {
     dependsOn("checkstyleMain", "checkstyleTest")
 }
@@ -73,6 +97,12 @@ tasks.register<YlintTask>("Ylint") {
  * requested: spotlessApply before Checkstyle for --fix, spotlessCheck in parallel
  * otherwise.
  */
+/**
+ * Dynamic Task Graph Construction
+ * * Intercepts the execution graph when 'Ylint' is targeted. Adjusts the task topology
+ * based on the runtime '--fix' option: orchestrates Spotless to auto-format files 
+ * prior to Checkstyle validation if requested, or runs validations concurrently otherwise.
+ */
 gradle.taskGraph.whenReady {
     val ylint = tasks.findByName("Ylint") as? YlintTask ?: return@whenReady
     if (!hasTask(ylint)) return@whenReady
@@ -81,6 +111,7 @@ gradle.taskGraph.whenReady {
     val checkstyleTasks = listOf("checkstyleMain", "checkstyleTest")
 
     if (ylint.fix) {
+        // Inject a strict ordering constraint: format files before linting them
         checkstyleTasks.forEach { name ->
             tasks.named(name).configure {
                 dependsOn(spotlessName)
