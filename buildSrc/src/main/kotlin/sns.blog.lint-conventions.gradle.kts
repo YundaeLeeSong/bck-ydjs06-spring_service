@@ -47,7 +47,9 @@ checkstyle {
 /**
  * [Spotless Configuration]
  * Across Java source sets, it enforces and handles
- * 1. unified code formatting (e.g., indentation, line breaks, spacing) with google-java-format, 
+ * 1. unified formatting with google-java-format:
+ *    - Java code: indentation, line breaks, spacing
+ *    - Javadoc: preserves multi-paragraph structure by inserting <p> tags for blank lines
  * 2. import optimization (e.g., removing unused imports, sorting imports), and
  * 3. automatically corrects whitespace layout issues
  *
@@ -72,11 +74,8 @@ spotless {
         target("src/main/java/**/*.java", "src/test/java/**/*.java")
         /*
          * [Javadoc HTML]
-         * google-java-format treats Javadoc literally as text 
-         * even if you use HTML tags or markdown format.
-         * 
-         * To preserve the structure of Javadocs and prevent merging of paragraphs,
-         * use standard HTML tags (e.g., <p>, <ul>, <li>) within Javadocs instead of markdown syntax.
+         * Blank lines between Javadoc paragraphs trigger <p> insertion; markdown-style breaks
+         * are not preserved. Prefer explicit HTML (e.g., <p>, <ul>, <li>) for multi-paragraph docs.
          */
         googleJavaFormat("1.22.0")
         removeUnusedImports()
@@ -91,17 +90,13 @@ tasks.register<YlintTask>("Ylint") {
 }
 
 /*
- * [Task graph --fix]
- * The fix flag is a runtime @Option, so it is not available when the register
- * block above runs. whenReady wires Spotless into the graph only when Ylint is
- * requested: spotlessApply before Checkstyle for --fix, spotlessCheck in parallel
- * otherwise.
- */
-/**
- * Dynamic Task Graph Construction
- * * Intercepts the execution graph when 'Ylint' is targeted. Adjusts the task topology
- * based on the runtime '--fix' option: orchestrates Spotless to auto-format files 
- * prior to Checkstyle validation if requested, or runs validations concurrently otherwise.
+ * Dynamic task graph for Ylint.
+ *
+ * The --fix flag is a runtime @Option, so it is not known when the register block
+ * above runs. whenReady intercepts the graph only when Ylint is targeted and wires
+ * Spotless in based on that flag:
+ *   --fix        -> spotlessApply runs before Checkstyle (format, then lint)
+ *   no --fix     -> spotlessCheck runs in parallel with Checkstyle
  */
 gradle.taskGraph.whenReady {
     val ylint = tasks.findByName("Ylint") as? YlintTask ?: return@whenReady
